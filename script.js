@@ -1,28 +1,40 @@
-//your JS code here. If required.
-// Delay function using a Promise and setTimeout
-function wait(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+// Wait for the DOM to fully load
+document.addEventListener('DOMContentLoaded', () => {
+    // Get elements from the DOM
+    const btn = document.getElementById('btn');
+    const textInput = document.getElementById('text');
+    const delayInput = document.getElementById('delay');
+    const outputDiv = document.getElementById('output');
 
-// Async function to handle delay and display
-async function handleDisplay() {
-  const textInput = document.getElementById("text").value;
-  const delayInput = parseInt(document.getElementById("delay").value);
-  const outputDiv = document.getElementById("output");
+    // Helper function to create a delay using a Promise
+    function wait(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
-  // Optional: Input validation
-  if (!textInput || isNaN(delayInput) || delayInput < 0) {
-    outputDiv.textContent = "Please enter valid text and delay.";
-    return;
-  }
+    // Async function to handle the delay and message display
+    async function displayMessage() {
+        const message = textInput.value;
+        const delay = parseInt(delayInput.value);
 
-  outputDiv.textContent = "Waiting...";
+        // Clear previous output immediately
+        outputDiv.textContent = '';
 
-  await wait(delayInput);
+        // Validate delay (basic check)
+        if (isNaN(delay) || delay < 0) {
+            outputDiv.textContent = 'Please enter a valid positive number for delay.';
+            return;
+        }
 
-  outputDiv.textContent = textInput;
-}
+        // Wait for the specified delay
+        await wait(delay);
 
-// Attach event listener to the button
-document.getElementById("btn").addEventListener("click", handleDisplay);
+        // Display the message
+        outputDiv.textContent = message;
+    }
 
+    // Add click event listener to the button
+    btn.addEventListener('click', (event) => {
+        event.preventDefault(); // Prevent form submission
+        displayMessage();
+    });
+});
